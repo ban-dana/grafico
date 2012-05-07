@@ -233,7 +233,10 @@ Grafico.BaseGraph = Class.create(Grafico.Base, {
       min:                    0,
       max:                    null,
       normaliser:        Grafico.Normaliser,
-      font_name             : 'Arial'
+      font_name             : 'Arial',
+      horizontal_axis_label:  '',
+      vertical_axis_label:    '',
+	  axis_font_weight      : ''
     };
 
     Object.extend(this.options, this.chartDefaults() || { });
@@ -281,10 +284,16 @@ Grafico.BaseGraph = Class.create(Grafico.Base, {
     this.x_padding_left = 10 + this.paddingLeftOffset();
     this.x_padding_left += this.options.vertical_label_unit ? 6 : 0;
     this.x_padding_left = this.options.left_padding ? this.options.left_padding : this.x_padding_left;
+    if (this.options.vertical_axis_label !== '') {
+        this.x_padding_left += this.options.font_size + 5;
+    }
     this.x_padding_right = this.options.right_padding || this.paddingRightOffset();
     this.x_padding = this.x_padding_left + this.x_padding_right;
     this.y_padding_top = this.options.padding_top;
     this.y_padding_bottom = 20 + this.paddingBottomOffset();
+    if (this.options.horizontal_axis_label !== '') {
+        this.y_padding_bottom += this.options.font_size + 5;
+    }
     this.y_padding = this.y_padding_top + this.y_padding_bottom;
 
     this.graph_width = this.options.width - this.x_padding;
@@ -467,6 +476,10 @@ Grafico.BaseGraph = Class.create(Grafico.Base, {
 
     if (this.options.draw_axis) {
       this.drawAxis();
+    }
+
+    if (this.options.horizontal_axis_label !== '' || this.options.vertical_axis_label != '') {
+        this.drawAxisLabels();
     }
 
     if (this.start_value !== 0 && this.options.focus_hint) {
@@ -660,6 +673,15 @@ Grafico.BaseGraph = Class.create(Grafico.Base, {
     //vertical
     cursor.moveTo(parseInt(this.x_padding_left, 10) - 0.5, parseInt(this.options.height - this.y_padding_bottom, 10) + 0.5);
     cursor.lineTo(parseInt(this.x_padding_left, 10) - 0.5, parseInt(this.y_padding_top, 10));
+  },
+
+  drawAxisLabels: function () {
+    font_options = {"font": this.options.font_size + 'px ' + this.options.font_name, stroke: "none", fill: this.options.label_color};
+    if (this.options.axis_font_weight !== '') {
+        font_options["font-weight"] = this.options.axis_font_weight;
+    }
+    this.paper.text(parseInt(this.x_padding_left, 10) - 0.5 + this.graph_width / 2, this.options.height - this.options.font_size, this.options.horizontal_axis_label).attr(font_options);
+    this.paper.text(this.options.font_size, (this.options.height - this.y_padding_bottom) / 2,  this.options.vertical_axis_label).attr(font_options).attr({ transform: "r-90"});
   },
 
   makeValueLabels: function (steps) {
