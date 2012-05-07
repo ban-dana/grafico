@@ -687,7 +687,7 @@ Grafico.BaseGraph = Class.create(Grafico.Base, {
     var x = parseInt(this.x_padding_left, 10) - 0.5 + x_offset(start_offset),
         y = this.options.height - this.y_padding_bottom + y_offset(start_offset),
         cursor = this.paper.path().attr({stroke: this.options.label_color}),
-        font_options = {"font": this.options.font_size + 'px ' + this.options.font_name, stroke: "none", fill: this.options.label_color};
+        font_options = {"font": this.options.font_size + 'px "Arial"', stroke: "none", fill: this.options.label_color};
 
     Object.extend(font_options, extra_font_options || {});
 
